@@ -25,11 +25,17 @@ const register = async(req, res) => {
 
 const login = async(req, res) => {
     try{
-        const {email,password} = req.body;
-        if(!email || !password){
-            return res.status(400).json({message: "email and password are required"});
+        const {email, username, password} = req.body;
+        const identifier = email || username;
+        if(!identifier || !password){
+            return res.status(400).json({message: "Username/Email and password are required"});
         }
-        const existing_user = await User.findOne({email});
+        const existing_user = await User.findOne({
+            $or: [
+                { email: identifier },
+                { username: identifier }
+            ]
+        });
         if(!existing_user){
             return res.status(400).json({message: "User does not exist"});
         } 
