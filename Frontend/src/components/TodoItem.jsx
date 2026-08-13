@@ -19,7 +19,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
         onToggleTodo(todo._id, response.data.todo);
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update task');
+      console.error(err.response?.data?.message || 'Failed to update task');
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
       }
       setIsEditing(false);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to save task');
+      console.error(err.response?.data?.message || 'Failed to save task');
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
       });
       onDeleteTodo(todo._id);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete task');
+      console.error(err.response?.data?.message || 'Failed to delete task');
     } finally {
       setLoading(false);
     }

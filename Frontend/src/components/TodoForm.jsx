@@ -23,7 +23,7 @@ function TodoForm({ onTodoAdded }) {
       }
       setTitle('');
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to add task');
+      console.error(err.response?.data?.message || 'Failed to add task');
     } finally {
       setLoading(false);
     }
