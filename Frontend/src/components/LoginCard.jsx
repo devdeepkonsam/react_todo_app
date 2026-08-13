@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-function LoginCard({ onLogin, onSwitchToRegister, loading }) {
+const backendUrl = import.meta.env.VITE_BACKEND_API;
+
+function LoginCard({ onLoginSuccess, onSwitchToRegister }) {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onLogin(identifier, password);
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${backendUrl}/auth/login`, {
+        email: identifier, password
+      });
+
+      const { user, token } = response.data;
+      localStorage.setItem('todo_token', token);
+      localStorage.setItem('todo_user', JSON.stringify(user));
+
+      if (onLoginSuccess) onLoginSuccess(user, token);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -15,24 +37,18 @@ function LoginCard({ onLogin, onSwitchToRegister, loading }) {
         <h1 className="auth-title">Welcome Back</h1>
         <p className="auth-subtitle">Sign in to manage your tasks efficiently</p>
         
+        {error && <div className="message error" style={{ marginBottom: '16px', color: '#ef4444' }}>{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Username or Email</label>
             <div className="input-wrapper">
               <span className="input-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
                 </svg>
               </span>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="username or email"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                required
-              />
+              <input type="text" className="form-input" placeholder="username or email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
             </div>
           </div>
 
@@ -41,18 +57,10 @@ function LoginCard({ onLogin, onSwitchToRegister, loading }) {
             <div className="input-wrapper">
               <span className="input-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
               </span>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <input type="password" className="form-input" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
           </div>
 
@@ -63,9 +71,7 @@ function LoginCard({ onLogin, onSwitchToRegister, loading }) {
 
         <div className="auth-footer">
           Don't have an account?{' '}
-          <button className="auth-link" onClick={onSwitchToRegister}>
-            Register here
-          </button>
+          <button className="auth-link" onClick={onSwitchToRegister}>Register here</button>
         </div>
       </div>
     </div>
