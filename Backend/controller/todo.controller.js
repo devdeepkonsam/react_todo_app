@@ -1,4 +1,4 @@
-const Todo = require("../model/todo.model");
+const Todo = require("../models/todo.model");
 
 const viewTodo = async(req,res) => {
     try {
