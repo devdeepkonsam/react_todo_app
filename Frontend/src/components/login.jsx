@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const backendurl = import.meta.env.VITE_SERVER_URL;
+const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
+const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
 
 function Login() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(`${backendurl}/api/auth/login`, { email, password });
+      const response = await axios.post(`${apiBase}/auth/login`, { email, password });
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/todo");

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const backendurl = import.meta.env.VITE_SERVER_URL;
+const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
+const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
 
 function Register() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Register() {
     setError("");
 
     try {
-      await axios.post(`${backendurl}/api/auth/register`, { username: name, email, password });
+      await axios.post(`${apiBase}/auth/register`, { username: name, email, password });
       alert("Registration Successful");
       navigate("/login");
     } catch (err) {

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const backendurl = import.meta.env.VITE_SERVER_URL;
+const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
+const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
 
 function Todo(){
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ function Todo(){
         try{
             setLoading(true);
             setError("");
-            const response = await axios.get(`${backendurl}/api/todo`, {headers:{Authorization:`Bearer ${token}`}});
+            const response = await axios.get(`${apiBase}/todo`, {headers:{Authorization:`Bearer ${token}`}});
             setTodos(Array.isArray(response.data) ? response.data : (response.data.todos || []));
         }catch(error){
             setError(error.response?.data?.message || "failed to view a task");
@@ -52,7 +53,7 @@ function Todo(){
 
         try{
             setError("");
-            await axios.post(`${backendurl}/api/todo`, {title:title},{headers:{Authorization:`Bearer ${token}`}});
+            await axios.post(`${apiBase}/todo`, {title:title},{headers:{Authorization:`Bearer ${token}`}});
             setTitle("");
             getTodo();
         }catch(error){
@@ -63,7 +64,7 @@ function Todo(){
     const updateTask = async(id)=>{
         try{
             setError("");
-            await axios.put(`${backendurl}/api/todo/${id}`, {title:editTitle},{headers:{Authorization:`Bearer ${token}`}});
+            await axios.put(`${apiBase}/todo/${id}`, {title:editTitle},{headers:{Authorization:`Bearer ${token}`}});
             setEditID(null);
             setEditTitle("");
             getTodo();
@@ -75,7 +76,7 @@ function Todo(){
     const toogleTodo = async(todo)=>{
         try{
             setError("");
-            await axios.put(`${backendurl}/api/todo/${todo._id}`, {completed:!todo.completed},{headers:{Authorization:`Bearer ${token}`}});
+            await axios.put(`${apiBase}/todo/${todo._id}`, {completed:!todo.completed},{headers:{Authorization:`Bearer ${token}`}});
             getTodo();
         }catch(error){
             setError(error.response?.data?.message || "failed to toggle task");
@@ -90,7 +91,7 @@ function Todo(){
     const deleteTodo = async(id) =>{
         try{
             setError("");
-            await axios.delete(`${backendurl}/api/todo/${id}`,{headers:{Authorization:`Bearer ${token}`}});
+            await axios.delete(`${apiBase}/todo/${id}`,{headers:{Authorization:`Bearer ${token}`}});
             getTodo();
         }catch(error){
             setError(error.response?.data?.message || "failed to delete task");
