@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
-const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
+const backendUrl = import.meta.env.VITE_BACKEND_API;
 
 function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -13,7 +12,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('todo_token');
-      const response = await axios.put(`${apiBase}/todo/${todo._id}`, { completed: !todo.completed }, {
+      const response = await axios.put(`${backendUrl}/todo/${todo._id}`, { completed: !todo.completed }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data?.todo) {
@@ -31,7 +30,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('todo_token');
-      const response = await axios.put(`${apiBase}/todo/${todo._id}`, { title: editingTitle }, {
+      const response = await axios.put(`${backendUrl}/todo/${todo._id}`, { title: editingTitle }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data?.todo) {
@@ -50,7 +49,7 @@ function TodoItem({ todo, onToggleTodo, onSaveEdit, onDeleteTodo }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('todo_token');
-      await axios.delete(`${apiBase}/todo/${todo._id}`, {
+      await axios.delete(`${backendUrl}/todo/${todo._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onDeleteTodo(todo._id);

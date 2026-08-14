@@ -3,8 +3,7 @@ import axios from 'axios';
 import TodoForm from './TodoForm';
 import TodoItem from './TodoItem';
 
-const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
-const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
+const backendUrl = import.meta.env.VITE_BACKEND_API;
 
 function TodoDashboard({ user, onLogout }) {
   const [todos, setTodos] = useState([]);
@@ -19,7 +18,7 @@ function TodoDashboard({ user, onLogout }) {
     setTodosLoading(true);
     try {
       const token = localStorage.getItem('todo_token');
-      const response = await axios.get(`${apiBase}/todo`, {
+      const response = await axios.get(`${backendUrl}/todo`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTodos(response.data.todos || []);

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
-const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
+const backendUrl = import.meta.env.VITE_BACKEND_API;
 
 function RegisterCard({ onRegisterSuccess, onSwitchToLogin }) {
   const [username, setUsername] = useState('');
@@ -19,7 +18,7 @@ function RegisterCard({ onRegisterSuccess, onSwitchToLogin }) {
     setSuccess('');
 
     try {
-      await axios.post(`${apiBase}/auth/register`, {
+      await axios.post(`${backendUrl}/auth/register`, {
         username, email, password
       });
 

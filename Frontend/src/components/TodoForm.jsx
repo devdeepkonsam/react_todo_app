@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const backendurl = (import.meta.env.VITE_BACKEND_API || import.meta.env.VITE_SERVER_URL || "").replace(/\/$/, "");
-const apiBase = backendurl.endsWith("/api") ? backendurl : `${backendurl}/api`;
+const backendUrl = import.meta.env.VITE_BACKEND_API;
 
 function TodoForm({ onTodoAdded }) {
   const [title, setTitle] = useState('');
@@ -15,7 +14,7 @@ function TodoForm({ onTodoAdded }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('todo_token');
-      const response = await axios.post(`${apiBase}/todo`, { title }, {
+      const response = await axios.post(`${backendUrl}/todo`, { title }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
