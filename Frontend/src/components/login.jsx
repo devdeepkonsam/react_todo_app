@@ -45,39 +45,4 @@ function Login() {
   );
 }
 
-/*
-
-function LoginWithIdentifier() {
-  const navigate = useNavigate();
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const submitData = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await axios.post(`${backendurl}/api/auth/login`, { 
-        email: identifier,
-        password: password 
-      });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/todo");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-          <input 
-            type="text" 
-            placeholder="Enter Your Email or Username" 
-            value={identifier} 
-            onChange={(e) => setIdentifier(e.target.value)} 
-            required 
-          />
-*/
+export default Login;
