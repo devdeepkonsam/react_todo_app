@@ -9,18 +9,22 @@ const todo_routes = require("./routes/todo.routes");
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+    res.json({ message: "Todo App Backend API is active"});
+});
+
 mongoose.connect(process.env.MONGODB)
-.then(()=>{
-    console.log("Database Connected")
-})
-.catch((error)=>{
-    console.log(error)
-})
+    .then(() => {
+        console.log("Database Connected")
+    })
+    .catch((error) => {
+        console.log(error)
+    })
 
 app.use("/api/auth", user_routes);
 app.use("/api/todo", todo_routes);
 
 
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(process.env.PORT || 3000, () => {
     console.log(`server running on port ${process.env.PORT}`);
 })
